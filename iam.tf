@@ -18,7 +18,7 @@ resource "aws_iam_role" "static_site_actions_push" {
         }
         Condition = {
           StringLike = {
-            "token.actions.githubusercontent.com:sub" : "repo:${var.tenant_vars.repository}:environment:${var.tenant_vars.github_environment_name}"
+            "token.actions.githubusercontent.com:sub" : [for repo in var.tenant_vars.repositories : "repo:${repo}:environment:${var.tenant_vars.github_environment_name}"]
             "sts:RoleSessionName" : "GitHubActions"
           }
           StringEquals = {
