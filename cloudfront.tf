@@ -43,6 +43,8 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
     min_ttl                = 0
     default_ttl            = 0
     max_ttl                = 86400
+    response_headers_policy_id = var.enable_security_headers ? aws_cloudfront_response_headers_policy.security_headers[0].id : null  # ADDED
+
 
     function_association {
       event_type   = "viewer-request"

@@ -37,3 +37,9 @@ variable "cloud_front_default_vars" {
 variable "aws_region" {
   type = string
 }
+
+variable "enable_security_headers" {
+  type        = bool
+  description = "Enable HSTS and security response headers policy on CloudFront"
+  default     = false
+}
