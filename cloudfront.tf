@@ -7,6 +7,9 @@ resource "aws_cloudfront_origin_access_control" "static_site_identity" {
 }
 
 resource "aws_cloudfront_distribution" "static_site_distribution" {
+  #checkov:skip=CKV_AWS_310:Single-origin static site does not require origin failover
+  #checkov:skip=CKV_AWS_374:Static content is intended to be globally accessible
+  #checkov:skip=CKV2_AWS_47:WAF ACL is attached externally via waf_acl_id input
   origin {
     domain_name              = aws_s3_bucket.static_site.bucket_regional_domain_name
     origin_id                = aws_s3_bucket.static_site.id
@@ -18,11 +21,12 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
   comment             = "Cloudfront distribution for ${var.tenant_vars.product} ${var.tenant_vars.component}"
   default_root_object = "index.html"
 
-  # logging_config {
-  #   include_cookies = false
-  #   bucket          = "mylogs.s3.amazonaws.com"
-  #   prefix          = "myprefix"
-  # }
+  # CKV_AWS_86 - CloudFront access logging
+  logging_config {
+    include_cookies = false
+    bucket          = aws_s3_bucket.static_site_logs.bucket_regional_domain_name
+    prefix          = "cloudfront-access-logs/"
+  }
 
   aliases = var.tenant_vars.cloudfront_aliases
 
@@ -39,27 +43,24 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
       }
     }
 
-    viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 86400
-    response_headers_policy_id = var.enable_security_headers ? aws_cloudfront_response_headers_policy.security_headers[0].id : null  # ADDED
-
+    viewer_protocol_policy     = "redirect-to-https"
+    min_ttl                    = 0
+    default_ttl                = 0
+    max_ttl                    = 86400
+    response_headers_policy_id = var.enable_security_headers ? aws_cloudfront_response_headers_policy.security_headers[0].id : null
 
     function_association {
       event_type   = "viewer-request"
       function_arn = var.cloudfront_function_rewrite_arn
     }
-
   }
 
   custom_error_response {
     error_code            = 404
-    response_page_path    = "/404.html" # Path to your custom error page
+    response_page_path    = "/404.html"
     response_code         = 404
-    error_caching_min_ttl = 10 # Cache TTL in seconds
+    error_caching_min_ttl = 10
   }
-
 
   restrictions {
     geo_restriction {
@@ -77,5 +78,6 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
     cloudfront_default_certificate = "false"
     ssl_support_method             = "sni-only"
   }
+
   web_acl_id = var.waf_acl_id
 }
