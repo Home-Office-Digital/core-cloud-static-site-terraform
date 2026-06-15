@@ -7,6 +7,9 @@ resource "aws_cloudfront_origin_access_control" "static_site_identity" {
 }
 
 resource "aws_cloudfront_distribution" "static_site_distribution" {
+  #checkov:skip=CKV_AWS_310:Single-origin static site does not require origin failover
+  #checkov:skip=CKV_AWS_374:Static content is intended to be globally accessible
+  #checkov:skip=CKV2_AWS_47:WAF ACL is attached externally via waf_acl_id input
   origin {
     domain_name              = aws_s3_bucket.static_site.bucket_regional_domain_name
     origin_id                = aws_s3_bucket.static_site.id
@@ -59,7 +62,6 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
     error_caching_min_ttl = 10
   }
 
-  # CKV_AWS_374 - skipped, static site has no geo requirements
   restrictions {
     geo_restriction {
       restriction_type = "none"
