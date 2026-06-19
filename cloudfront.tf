@@ -7,6 +7,10 @@ resource "aws_cloudfront_origin_access_control" "static_site_identity" {
 }
 
 resource "aws_cloudfront_distribution" "static_site_distribution" {
+  #checkov:skip=CKV_AWS_310:Static site distribution uses a single S3 origin and does not require origin failover
+  #checkov:skip=CKV_AWS_86:CloudFront access logging is managed outside this module
+  #checkov:skip=CKV_AWS_374:Static sites are intentionally globally accessible without geo restrictions
+  #checkov:skip=CKV2_AWS_47:WAF rules are managed in the external WebACL passed via var.waf_acl_id
   origin {
     domain_name              = aws_s3_bucket.static_site.bucket_regional_domain_name
     origin_id                = aws_s3_bucket.static_site.id

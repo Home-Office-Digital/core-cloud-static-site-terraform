@@ -1,4 +1,8 @@
 resource "aws_s3_bucket" "static_site" {
+  #checkov:skip=CKV_AWS_18:S3 access logging is managed outside this module
+  #checkov:skip=CKV_AWS_144:Cross-region replication is not required for static content that is redeployable
+  #checkov:skip=CKV2_AWS_61:Lifecycle policies are managed by consuming environments where needed
+  #checkov:skip=CKV2_AWS_62:Event notifications are not required for this static content bucket
   bucket = "cc-static-site-${var.tenant_vars.product}-${var.tenant_vars.component}"
 
   tags = local.common_tags
