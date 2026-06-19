@@ -27,4 +27,4 @@ jobs:
       sonar_token: ${{ secrets.sonar_token }}
       sonar_host_url: ${{ secrets.sonar_host_url }}
   checkov-scan:
-     uses: UKHomeOffice/core-cloud-workflow-checkov-sast-scan/.github/workflows/checkov-scan-base.yaml@a25892b307f06f1afabcee89dcfce9f849aa62b4 #1.14.5
+     uses: Home-Office-Digital/core-cloud-workflow-checkov-sast-scan/.github/workflows/checkov-scan-base.yaml@a25892b307f06f1afabcee89dcfce9f849aa62b4 #1.14.5
