@@ -24,7 +24,7 @@
  
  jobs:
    sast-checkov-scan-plan:
-     uses: UKHomeOffice/core-cloud-workflow-checkov-sast-scan/.github/workflows/checkov-scan-tfplan.yaml@1.5.0
+     uses: UKHomeOffice/core-cloud-workflow-checkov-sast-scan/.github/workflows/checkov-scan-tfplan.yaml@a25892b307f06f1afabcee89dcfce9f849aa62b4 #1.14.5
      with:
       path: '.'
       
