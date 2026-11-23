@@ -7,10 +7,6 @@ updates:
           interval: "daily"
       commit-message:
           prefix: "chore(GHA)"
-      labels:
-          - "dependencies"
-          - "patch"
-          - "actions"
       groups:
           # One group for everything, majors included, since an action
           # major is usually just a runtime bump
@@ -21,7 +17,6 @@ updates:
                   - "minor"
                   - "patch"
                   - "major"
-
     # Enable TF updates for Terraform Projects
     - package-ecosystem: "terraform"
       directory: "/"
@@ -29,10 +24,6 @@ updates:
           interval: "daily"
       commit-message:
           prefix: "chore(TF)"
-      labels:
-          - "dependencies"
-          - "patch"
-          - "terraform"
       groups:
           terraform-security:
               applies-to: security-updates
@@ -43,3 +34,14 @@ updates:
               update-types:
                   - "minor"
                   - "patch"
+    # Enable pre-commit hook updates
+    - package-ecosystem: "pre-commit"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      commit-message:
+          prefix: "chore(pre-commit)"
+      groups:
+          pre-commit-all:
+              patterns:
+                  - "*"
