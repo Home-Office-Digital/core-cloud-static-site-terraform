@@ -46,3 +46,7 @@ updates:
           interval: "daily"
       commit-message:
           prefix: "chore(pre-commit)"
+      groups:
+          pre-commit-all:
+              patterns:
+                  - "*"
