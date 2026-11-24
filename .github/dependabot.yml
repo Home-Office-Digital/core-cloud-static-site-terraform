@@ -1,0 +1,52 @@
+version: 2
+# Labels are intentionally not set. Dependabot then applies its defaults: a
+# "dependencies" label, an ecosystem label, and the matching SemVer label
+# (major/minor/patch) when those labels exist in the repository. Hardcoding
+# "patch" here would add a second SemVer label to minor/major updates and fail
+# the SemVer label check.
+updates:
+    # Enable Github Action updates
+    - package-ecosystem: "github-actions"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      commit-message:
+          prefix: "chore(GHA)"
+      groups:
+          # One group for everything, majors included, since an action
+          # major is usually just a runtime bump
+          github-actions-all:
+              patterns:
+                  - "*"
+              update-types:
+                  - "minor"
+                  - "patch"
+                  - "major"
+    # Enable TF updates for Terraform Projects
+    - package-ecosystem: "terraform"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      commit-message:
+          prefix: "chore(TF)"
+      groups:
+          terraform-security:
+              applies-to: security-updates
+              patterns:
+                  - "*"
+          terraform-minor-and-patch:
+              applies-to: version-updates
+              update-types:
+                  - "minor"
+                  - "patch"
+    # Enable pre-commit hook updates (.pre-commit-config.yaml)
+    - package-ecosystem: "pre-commit"
+      directory: "/"
+      schedule:
+          interval: "daily"
+      commit-message:
+          prefix: "chore(pre-commit)"
+      groups:
+          pre-commit-all:
+              patterns:
+                  - "*"
